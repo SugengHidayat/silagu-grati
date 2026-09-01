@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f4c81">
+  <title>Login SILAGU</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #0f4c81;
+      --primary-dark: #0a365c;
+      --secondary: #1d7a8c;
+      --success: #198754;
+      --danger: #c0392b;
+      --warning: #d68910;
+      --bg: #eef4f8;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #64748b;
+      --border: #dbe5ee;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(29, 122, 140, 0.16), transparent 30%),
+        linear-gradient(135deg, #eef5fa 0%, #f8fbfd 50%, #e8f1f7 100%);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 980px;
+      min-height: 590px;
+      background: var(--card);
+      border-radius: 26px;
+      overflow: hidden;
+      box-shadow: 0 24px 70px rgba(15, 76, 129, 0.16);
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      border: 1px solid rgba(255,255,255,.8);
+    }
+
+    .brand-panel {
+      position: relative;
+      padding: 56px 48px;
+      color: #fff;
+      background:
+        linear-gradient(145deg, rgba(9, 52, 89, .98), rgba(15, 76, 129, .96) 55%, rgba(29, 122, 140, .93));
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .brand-panel::before,
+    .brand-panel::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,.08);
+    }
+
+    .brand-panel::before {
+      width: 300px;
+      height: 300px;
+      top: -110px;
+      right: -100px;
+    }
+
+    .brand-panel::after {
+      width: 210px;
+      height: 210px;
+      bottom: -75px;
+      left: -65px;
+    }
+
+    .brand-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .logo {
+      width: 74px;
+      height: 74px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.96);
+      color: var(--primary);
+      display: grid;
+      place-items: center;
+      font-size: 29px;
+      font-weight: 800;
+      margin-bottom: 30px;
+      box-shadow: 0 12px 32px rgba(0,0,0,.13);
+    }
+
+    .brand-panel h1 {
+      font-size: 42px;
+      letter-spacing: .5px;
+      margin-bottom: 12px;
+    }
+
+    .brand-panel .subtitle {
+      font-size: 18px;
+      line-height: 1.6;
+      color: rgba(255,255,255,.88);
+      max-width: 430px;
+    }
+
+    .roles {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 32px;
+      max-width: 430px;
+    }
+
+    .role-chip {
+      font-size: 13px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.11);
+      border: 1px solid rgba(255,255,255,.16);
+    }
+
+    .brand-footer {
+      position: relative;
+      z-index: 2;
+      font-size: 12px;
+      color: rgba(255,255,255,.72);
+      line-height: 1.6;
+      margin-top: 28px;
+    }
+
+    .login-panel {
+      padding: 54px 48px;
+      display: flex;
+      align-items: center;
+      background: rgba(255,255,255,.98);
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 390px;
+      margin: 0 auto;
+    }
+
+    .login-box h2 {
+      font-size: 28px;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+    }
+
+    .login-box > p {
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 19px;
+    }
+
+    label {
+      display: block;
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 8px;
+      color: #334155;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid var(--border);
+      outline: none;
+      padding: 14px 44px 14px 15px;
+      border-radius: 12px;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      transition: .2s ease;
+    }
+
+    input:focus {
+      border-color: #5e9bc6;
+      box-shadow: 0 0 0 4px rgba(15,76,129,.09);
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 6px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .remember {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .remember input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--primary);
+    }
+
+    .login-btn {
+      width: 100%;
+      border: 0;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff;
+      padding: 15px 18px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: .2s ease;
+      box-shadow: 0 10px 24px rgba(15,76,129,.20);
+    }
+
+    .login-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(15,76,129,.24);
+    }
+
+    .login-btn:disabled {
+      opacity: .65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .message {
+      display: none;
+      margin-bottom: 18px;
+      padding: 12px 13px;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .message.error {
+      display: block;
+      color: #8f2d22;
+      background: #fdecea;
+      border: 1px solid #f4c7c3;
+    }
+
+    .message.success {
+      display: block;
+      color: #146c43;
+      background: #e9f7ef;
+      border: 1px solid #b7e4c7;
+    }
+
+    .message.info {
+      display: block;
+      color: #7a5a00;
+      background: #fff8dc;
+      border: 1px solid #f0dfa1;
+    }
+
+    .system-status {
+      margin-top: 18px;
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #94a3b8;
+    }
+
+    .dot.online {
+      background: var(--success);
+      box-shadow: 0 0 0 4px rgba(25,135,84,.10);
+    }
+
+    .dot.offline {
+      background: var(--danger);
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,.45);
+      border-top-color: #fff;
+      border-radius: 50%;
+      display: inline-block;
+      vertical-align: middle;
+      animation: spin .75s linear infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 800px) {
+      body {
+        padding: 14px;
+      }
+
+      .app-shell {
+        grid-template-columns: 1fr;
+        max-width: 520px;
+      }
+
+      .brand-panel {
+        padding: 34px 30px;
+      }
+
+      .brand-panel h1 {
+        font-size: 34px;
+      }
+
+      .roles {
+        margin-top: 22px;
+      }
+
+      .brand-footer {
+        display: none;
+      }
+
+      .login-panel {
+        padding: 38px 28px 42px;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .roles {
+        grid-template-columns: 1fr;
+      }
+
+      .brand-panel h1 {
+        font-size: 30px;
+      }
+
+      .login-panel {
+        padding-left: 22px;
+        padding-right: 22px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="app-shell">
+
+    <section class="brand-panel">
+      <div class="brand-content">
+
+        <div class="logo">S</div>
+
+        <h1>SILAGU</h1>
+
+        <p class="subtitle">
+          Sistem Administrasi Guru Terintegrasi untuk mendukung pengelolaan
+          administrasi, monitoring kepala sekolah, dan pengawasan sekolah.
+        </p>
+
+        <div class="roles">
+          <div class="role-chip">👨‍🏫 Guru</div>
+          <div class="role-chip">🏫 Kepala Sekolah</div>
+          <div class="role-chip">📊 Pengawas</div>
+          <div class="role-chip">⚙️ Super Admin</div>
+        </div>
+
+      </div>
+
+      <div class="brand-footer">
+        SILAGU • Sistem Administrasi Guru<br>
+        Akses sesuai kewenangan dan sekolah masing-masing.
+      </div>
+    </section>
+
+
+    <section class="login-panel">
+
+      <div class="login-box">
+
+        <h2>Masuk ke SILAGU</h2>
+
+        <p>
+          Gunakan username dan password yang telah diberikan oleh administrator.
+        </p>
+
+        <div id="message" class="message"></div>
+
+        <form id="loginForm">
+
+          <div class="form-group">
+            <label for="username">Username</label>
+
+            <div class="input-wrap">
+              <input
+                type="text"
+                id="username"
+                autocomplete="username"
+                placeholder="Masukkan username"
+                required
+              >
+            </div>
+          </div>
+
+
+          <div class="form-group">
+            <label for="password">Password</label>
+
+            <div class="input-wrap">
+
+              <input
+                type="password"
+                id="password"
+                autocomplete="current-password"
+                placeholder="Masukkan password"
+                required
+              >
+
+              <button
+                type="button"
+                class="toggle-password"
+                id="togglePassword"
+              >
+                LIHAT
+              </button>
+
+            </div>
+          </div>
+
+
+          <div class="options">
+
+            <label class="remember">
+              <input type="checkbox" id="rememberUsername">
+              Ingat username
+            </label>
+
+          </div>
+
+
+          <button
+            type="submit"
+            id="loginButton"
+            class="login-btn"
+          >
+            MASUK
+          </button>
+
+        </form>
+
+
+        <div class="system-status">
+          <span id="statusDot" class="dot"></span>
+          <span id="statusText">Memeriksa koneksi server...</span>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+<script>
+
+/* ==========================================================
+   SILAGU FRONTEND CONFIG
+========================================================== */
+
+const API_URL = "https://script.google.com/macros/s/AKfycbwdZVSuw0vXn5dJA9Krh2MOwcI95Ynh6emYMphPtaONoX6xXq0L6q558hVRbIl6disp/exec";
+
+
+/*
+  File dashboard yang akan dituju setelah login.
+  Pastikan nama file di GitHub sama persis.
+*/
+
+const ROLE_REDIRECT = {
+
+  SUPERADMIN:
+    "dashboard-admin.html",
+
+  PENGAWAS:
+    "dashboard-pengawas.html",
+
+  KEPALA_SEKOLAH:
+    "dashboard-kepsek.html",
+
+  GURU:
+    "dashboard-guru.html"
+
+};
+
+
+/* ==========================================================
+   ELEMENT
+========================================================== */
+
+const loginForm =
+  document.getElementById("loginForm");
+
+const usernameInput =
+  document.getElementById("username");
+
+const passwordInput =
+  document.getElementById("password");
+
+const loginButton =
+  document.getElementById("loginButton");
+
+const messageBox =
+  document.getElementById("message");
+
+const togglePassword =
+  document.getElementById("togglePassword");
+
+const rememberUsername =
+  document.getElementById("rememberUsername");
+
+const statusDot =
+  document.getElementById("statusDot");
+
+const statusText =
+  document.getElementById("statusText");
+
+
+/* ==========================================================
+   MESSAGE
+========================================================== */
+
+function showMessage(type, message) {
+
+  messageBox.className =
+    "message " + type;
+
+  messageBox.textContent =
+    message;
+
+}
+
+
+function clearMessage() {
+
+  messageBox.className =
+    "message";
+
+  messageBox.textContent =
+    "";
+
+}
+
+
+/* ==========================================================
+   API HELPER
+========================================================== */
+
+async function apiPost(payload) {
+
+  const response =
+    await fetch(
+      API_URL,
+      {
+        method: "POST",
+
+        /*
+          text/plain digunakan agar request GitHub Pages
+          ke Apps Script tetap sederhana dan tidak
+          membutuhkan preflight OPTIONS.
+        */
+
+        headers: {
+          "Content-Type":
+            "text/plain;charset=utf-8"
+        },
+
+        body:
+          JSON.stringify(payload),
+
+        redirect:
+          "follow"
+      }
+    );
+
+
+  if (!response.ok) {
+
+    throw new Error(
+      "Server tidak dapat dihubungi."
+    );
+
+  }
+
+
+  const text =
+    await response.text();
+
+
+  try {
+
+    return JSON.parse(text);
+
+  }
+  catch (error) {
+
+    throw new Error(
+      "Respons server tidak valid."
+    );
+
+  }
+
+}
+
+
+/* ==========================================================
+   SERVER STATUS
+========================================================== */
+
+async function checkServer() {
+
+  try {
+
+    const response =
+      await fetch(
+        API_URL + "?action=ping",
+        {
+          method: "GET",
+          cache: "no-store"
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (data.success) {
+
+      statusDot.className =
+        "dot online";
+
+      statusText.textContent =
+        "Server SILAGU aktif";
+
+    }
+    else {
+
+      throw new Error();
+
+    }
+
+  }
+
+  catch (error) {
+
+    statusDot.className =
+      "dot offline";
+
+    statusText.textContent =
+      "Server tidak dapat dihubungi";
+
+  }
+
+}
+
+
+/* ==========================================================
+   SESSION
+========================================================== */
+
+function saveSession(data) {
+
+  localStorage.setItem(
+    "silagu_token",
+    data.token
+  );
+
+
+  localStorage.setItem(
+    "silagu_user",
+    JSON.stringify(data.user)
+  );
+
+
+  localStorage.setItem(
+    "silagu_expires_at",
+    data.expires_at || ""
+  );
+
+}
+
+
+function clearSession() {
+
+  localStorage.removeItem(
+    "silagu_token"
+  );
+
+  localStorage.removeItem(
+    "silagu_user"
+  );
+
+  localStorage.removeItem(
+    "silagu_expires_at"
+  );
+
+}
+
+
+/* ==========================================================
+   REDIRECT
+========================================================== */
+
+function redirectByRole(role) {
+
+  const normalizedRole =
+    String(role || "")
+      .trim()
+      .toUpperCase();
+
+
+  const target =
+    ROLE_REDIRECT[
+      normalizedRole
+    ];
+
+
+  if (!target) {
+
+    clearSession();
+
+    showMessage(
+      "error",
+      "Role akun tidak dikenali."
+    );
+
+    return;
+
+  }
+
+
+  window.location.href =
+    target;
+
+}
+
+
+/* ==========================================================
+   CEK SESSION SAAT HALAMAN DIBUKA
+========================================================== */
+
+async function checkExistingSession() {
+
+  const token =
+    localStorage.getItem(
+      "silagu_token"
+    );
+
+
+  if (!token) {
+    return;
+  }
+
+
+  try {
+
+    const result =
+      await apiPost({
+        action:
+          "validateSession",
+
+        token:
+          token
+      });
+
+
+    if (!result.valid) {
+
+      clearSession();
+
+      return;
+
+    }
+
+
+    const savedUser =
+      JSON.parse(
+        localStorage.getItem(
+          "silagu_user"
+        )
+        ||
+        "{}"
+      );
+
+
+    if (
+      savedUser
+      &&
+      savedUser.role
+    ) {
+
+      redirectByRole(
+        savedUser.role
+      );
+
+    }
+
+  }
+
+  catch (error) {
+
+    /*
+      Jika jaringan sementara terputus,
+      halaman login tetap dapat ditampilkan.
+    */
+
+  }
+
+}
+
+
+/* ==========================================================
+   LOGIN
+========================================================== */
+
+loginForm.addEventListener(
+  "submit",
+
+  async function(event) {
+
+    event.preventDefault();
+
+    clearMessage();
+
+
+    const username =
+      usernameInput.value.trim();
+
+
+    const password =
+      passwordInput.value;
+
+
+    if (
+      !username
+      ||
+      !password
+    ) {
+
+      showMessage(
+        "error",
+        "Username dan password wajib diisi."
+      );
+
+      return;
+
+    }
+
+
+    loginButton.disabled =
+      true;
+
+
+    loginButton.innerHTML =
+      '<span class="spinner"></span>Memeriksa akun...';
+
+
+    try {
+
+      const result =
+        await apiPost({
+
+          action:
+            "login",
+
+          username:
+            username,
+
+          password:
+            password
+
+        });
+
+
+      if (
+        !result.success
+      ) {
+
+        showMessage(
+          "error",
+          result.message
+          ||
+          "Login gagal."
+        );
+
+        return;
+
+      }
+
+
+      if (
+        !result.token
+        ||
+        !result.user
+      ) {
+
+        throw new Error(
+          "Data login dari server tidak lengkap."
+        );
+
+      }
+
+
+      saveSession(
+        result
+      );
+
+
+      if (
+        rememberUsername.checked
+      ) {
+
+        localStorage.setItem(
+          "silagu_username",
+          username
+        );
+
+      }
+      else {
+
+        localStorage.removeItem(
+          "silagu_username"
+        );
+
+      }
+
+
+      showMessage(
+        "success",
+        "Login berhasil. Membuka dashboard..."
+      );
+
+
+      setTimeout(
+        function() {
+
+          redirectByRole(
+            result.user.role
+          );
+
+        },
+        450
+      );
+
+    }
+
+    catch (error) {
+
+      showMessage(
+        "error",
+        error.message
+        ||
+        "Terjadi kesalahan saat login."
+      );
+
+    }
+
+    finally {
+
+      loginButton.disabled =
+        false;
+
+      loginButton.textContent =
+        "MASUK";
+
+    }
+
+  }
+);
+
+
+/* ==========================================================
+   SHOW / HIDE PASSWORD
+========================================================== */
+
+togglePassword.addEventListener(
+  "click",
+  function() {
+
+    const hidden =
+      passwordInput.type
+      ===
+      "password";
+
+
+    passwordInput.type =
+      hidden
+      ?
+      "text"
+      :
+      "password";
+
+
+    togglePassword.textContent =
+      hidden
+      ?
+      "SEMBUNYIKAN"
+      :
+      "LIHAT";
+
+  }
+);
+
+
+/* ==========================================================
+   LOAD SAVED USERNAME
+========================================================== */
+
+function loadSavedUsername() {
+
+  const saved =
+    localStorage.getItem(
+      "silagu_username"
+    );
+
+
+  if (saved) {
+
+    usernameInput.value =
+      saved;
+
+    rememberUsername.checked =
+      true;
+
+    passwordInput.focus();
+
+  }
+  else {
+
+    usernameInput.focus();
+
+  }
+
+}
+
+
+/* ==========================================================
+   START
+========================================================== */
+
+window.addEventListener(
+  "DOMContentLoaded",
+
+  function() {
+
+    loadSavedUsername();
+
+    checkServer();
+
+    checkExistingSession();
+
+  }
+);
+
+</script>
+
+</body>
+</html>
