@@ -1126,9 +1126,68 @@
             </select>
           </div>
 
+          <div class="field full">
+            <label>NAMA SEKOLAH</label>
+            <input
+              class="form-control"
+              id="fSchoolName"
+              type="text"
+              placeholder="Contoh: SDN Ranuklindungan I"
+              autocomplete="off"
+              required
+            >
+          </div>
+
           <div class="field">
-            <label>SEKOLAH</label>
-            <select id="fSchool"></select>
+            <label>NPSN</label>
+            <input
+              class="form-control"
+              id="fNpsn"
+              type="text"
+              inputmode="numeric"
+              placeholder="Masukkan NPSN sekolah"
+              autocomplete="off"
+              required
+            >
+          </div>
+
+          <div class="field">
+            <label>KECAMATAN</label>
+            <input
+              class="form-control"
+              id="fKecamatan"
+              type="text"
+              placeholder="Contoh: Grati"
+              autocomplete="off"
+              required
+            >
+          </div>
+
+          <div class="field">
+            <label>DESA</label>
+            <input
+              class="form-control"
+              id="fDesa"
+              type="text"
+              placeholder="Contoh: Ranuklindungan"
+              autocomplete="off"
+              required
+            >
+          </div>
+
+          <div class="field full">
+            <label>ALAMAT SEKOLAH</label>
+            <input
+              class="form-control"
+              id="fAlamat"
+              type="text"
+              placeholder="Masukkan alamat lengkap sekolah"
+              autocomplete="off"
+              required
+            >
+            <div style="margin-top:6px;color:var(--muted);font-size:10px;line-height:1.5">
+              Data sekolah akan dicocokkan dengan sheet SEKOLAH menggunakan NPSN dan identitas sekolah.
+            </div>
           </div>
 
           <div class="field">
@@ -1350,7 +1409,6 @@ async function refreshAll(showLoader=true){
     renderSchools();
     renderUsers();
     renderOverviewSchools();
-    populateSchoolOptions();
 
     await checkApi();
 
@@ -1558,22 +1616,6 @@ function renderUsers(){
 }
 
 
-function populateSchoolOptions(){
-  const select = document.getElementById("fSchool");
-
-  const current = select.value;
-
-  select.innerHTML =
-    `<option value="">Pilih sekolah</option>` +
-    schools.map(s=>
-      `<option value="${escAttr(s.id_sekolah)}">${esc(s.id_sekolah)} - ${esc(s.nama_sekolah)}</option>`
-    ).join("");
-
-  if(current){
-    select.value = current;
-  }
-}
-
 
 function openUserModal(){
   document.getElementById("userForm").reset();
@@ -1583,7 +1625,6 @@ function openUserModal(){
   document.getElementById("passwordField").style.display = "";
   document.getElementById("fPassword").required = true;
   document.getElementById("fStatus").value = "AKTIF";
-  populateSchoolOptions();
   syncSchoolField();
   document.getElementById("userModal").classList.add("show");
 }
@@ -1606,8 +1647,15 @@ function editUser(username){
   setValue("fRole",user.role);
   setValue("fStatus",user.status || "AKTIF");
 
-  populateSchoolOptions();
-  setValue("fSchool",user.id_sekolah);
+  const schoolData = schools.find(
+    s=>String(s.id_sekolah) === String(user.id_sekolah)
+  ) || {};
+
+  setValue("fSchoolName", schoolData.nama_sekolah || "");
+  setValue("fNpsn", schoolData.npsn || "");
+  setValue("fKecamatan", schoolData.kecamatan || "");
+  setValue("fDesa", schoolData.desa || "");
+  setValue("fAlamat", schoolData.alamat || "");
 
   document.getElementById("fUsername").readOnly = true;
   document.getElementById("passwordField").style.display = "none";
@@ -1641,7 +1689,11 @@ document.getElementById("userForm").addEventListener("submit", async function(e)
     username: value("fUsername"),
     email: value("fEmail"),
     role: value("fRole"),
-    id_sekolah: value("fSchool"),
+    nama_sekolah: value("fSchoolName"),
+    npsn: value("fNpsn"),
+    kecamatan: value("fKecamatan"),
+    desa: value("fDesa"),
+    alamat: value("fAlamat"),
     status: value("fStatus")
   };
 
@@ -1672,14 +1724,27 @@ document.getElementById("userForm").addEventListener("submit", async function(e)
 
 function syncSchoolField(){
   const role = value("fRole");
-  const school = document.getElementById("fSchool");
 
-  if(role === "PENGAWAS"){
-    school.disabled = true;
-    school.value = "";
-  }else{
-    school.disabled = false;
-  }
+  const fields = [
+    document.getElementById("fSchoolName"),
+    document.getElementById("fNpsn"),
+    document.getElementById("fKecamatan"),
+    document.getElementById("fDesa"),
+    document.getElementById("fAlamat")
+  ];
+
+  const isPengawas = role === "PENGAWAS";
+
+  fields.forEach(function(field){
+    if(!field) return;
+
+    field.disabled = isPengawas;
+    field.required = !isPengawas;
+
+    if(isPengawas){
+      field.value = "";
+    }
+  });
 }
 
 
