@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#eef7fb">
+  <title>SILAGU | Dashboard Kepala Sekolah</title>
+
+  <style>
+    :root{
+      --bg:#edf7f8;
+      --panel:#ffffff;
+      --panel-soft:#f7fbfc;
+      --sidebar:#12343d;
+      --sidebar-2:#184854;
+      --primary:#1f8190;
+      --primary-2:#35a6b1;
+      --text:#19333a;
+      --muted:#71868c;
+      --line:#dfebee;
+      --success:#39846c;
+      --warning:#bd8a3c;
+      --danger:#bf5d63;
+      --info:#397f9b;
+      --shadow:0 16px 40px rgba(25,51,58,.08);
+      --shadow-sm:0 7px 22px rgba(25,51,58,.06);
+      --radius:20px;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 90% 4%,rgba(53,166,177,.13),transparent 24%),
+        radial-gradient(circle at 12% 94%,rgba(31,129,144,.08),transparent 24%),
+        var(--bg);
+    }
+
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+
+    .app{
+      display:grid;
+      grid-template-columns:270px minmax(0,1fr);
+      min-height:100vh;
+    }
+
+    .sidebar{
+      position:sticky;
+      top:0;
+      height:100vh;
+      padding:24px 18px;
+      color:white;
+      background:
+        linear-gradient(180deg,rgba(53,166,177,.09),transparent 27%),
+        linear-gradient(180deg,var(--sidebar),#0d2931);
+      box-shadow:12px 0 34px rgba(13,41,49,.07);
+      z-index:30;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:13px;
+      padding:4px 8px 22px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+
+    .brand-mark{
+      width:46px;
+      height:46px;
+      display:grid;
+      place-items:center;
+      border-radius:15px;
+      background:linear-gradient(145deg,#49bcc4,#1f8190);
+      font-weight:900;
+      box-shadow:0 10px 26px rgba(53,166,177,.25);
+    }
+
+    .brand h1{
+      margin:0;
+      font-size:20px;
+      letter-spacing:.35px;
+    }
+
+    .brand p{
+      margin:2px 0 0;
+      font-size:11px;
+      color:#a7c6cc;
+    }
+
+    .menu-label{
+      margin:24px 10px 10px;
+      color:#7fa8b0;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:1.15px;
+    }
+
+    .nav{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+
+    .nav button{
+      width:100%;
+      border:0;
+      background:transparent;
+      color:#c7dce0;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:12px 14px;
+      border-radius:14px;
+      text-align:left;
+      transition:.2s ease;
+    }
+
+    .nav button:hover,
+    .nav button.active{
+      color:white;
+      background:rgba(255,255,255,.09);
+      transform:translateX(2px);
+    }
+
+    .nav-icon{
+      width:31px;
+      height:31px;
+      display:grid;
+      place-items:center;
+      border-radius:10px;
+      background:rgba(255,255,255,.08);
+      flex:0 0 auto;
+    }
+
+    .sidebar-bottom{
+      position:absolute;
+      left:18px;
+      right:18px;
+      bottom:20px;
+    }
+
+    .mini-profile{
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.055);
+      padding:13px;
+      border-radius:16px;
+    }
+
+    .mini-profile strong{
+      display:block;
+      font-size:13px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .mini-profile span{
+      color:#8fb4bc;
+      font-size:11px;
+    }
+
+    .main{
+      min-width:0;
+      padding:24px 28px 42px;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:18px;
+      margin-bottom:24px;
+    }
+
+    .headline h2{
+      margin:0;
+      font-size:28px;
+      letter-spacing:-.65px;
+    }
+
+    .headline p{
+      margin:5px 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .top-actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    .btn,.icon-btn{
+      min-height:42px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.92);
+      color:var(--text);
+      border-radius:13px;
+      padding:0 15px;
+      box-shadow:var(--shadow-sm);
+      transition:.2s ease;
+    }
+
+    .btn:hover,.icon-btn:hover{
+      transform:translateY(-1px);
+      border-color:#b9dce0;
+    }
+
+    .btn-primary{
+      background:linear-gradient(135deg,var(--primary),var(--primary-2));
+      color:white;
+      border-color:transparent;
+    }
+
+    .btn-soft{
+      background:#eef8f9;
+      color:var(--primary);
+      border-color:#d5e9ec;
+    }
+
+    .mobile-menu{display:none}
+
+    .view{display:none}
+    .view.active{display:block}
+
+    .hero{
+      display:grid;
+      grid-template-columns:minmax(0,1.5fr) minmax(300px,.8fr);
+      gap:18px;
+      margin-bottom:20px;
+    }
+
+    .welcome{
+      position:relative;
+      overflow:hidden;
+      padding:27px 28px;
+      border-radius:24px;
+      color:white;
+      background:linear-gradient(125deg,#12343d,#1f8190);
+      box-shadow:var(--shadow);
+    }
+
+    .welcome::after{
+      content:"";
+      position:absolute;
+      width:220px;
+      height:220px;
+      border:36px solid rgba(255,255,255,.065);
+      border-radius:50%;
+      right:-62px;
+      top:-92px;
+    }
+
+    .welcome small{
+      color:#b9e4e8;
+      font-weight:800;
+      letter-spacing:.7px;
+    }
+
+    .welcome h3{
+      margin:9px 0 8px;
+      font-size:25px;
+    }
+
+    .welcome p{
+      margin:0;
+      max-width:680px;
+      color:#d5ebee;
+      font-size:13px;
+      line-height:1.7;
+    }
+
+    .school-card{
+      background:rgba(255,255,255,.90);
+      border:1px solid rgba(255,255,255,.82);
+      border-radius:24px;
+      padding:21px;
+      box-shadow:var(--shadow);
+    }
+
+    .school-card .eyebrow{
+      color:var(--muted);
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.65px;
+    }
+
+    .school-card h3{
+      margin:9px 0 4px;
+      font-size:20px;
+    }
+
+    .school-card p{
+      margin:0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.6;
+    }
+
+    .school-badge{
+      display:inline-flex;
+      margin-top:14px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:#eaf7f2;
+      color:#2f7a65;
+      font-size:10px;
+      font-weight:850;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:15px;
+      margin-bottom:20px;
+    }
+
+    .stat{
+      background:rgba(255,255,255,.92);
+      border:1px solid rgba(255,255,255,.84);
+      border-radius:20px;
+      padding:19px;
+      box-shadow:var(--shadow-sm);
+    }
+
+    .stat-top{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
+    }
+
+    .stat-label{
+      color:var(--muted);
+      font-size:12px;
+      font-weight:750;
+    }
+
+    .stat-number{
+      display:block;
+      margin-top:8px;
+      font-size:29px;
+      font-weight:900;
+      letter-spacing:-.85px;
+    }
+
+    .stat-icon{
+      width:43px;
+      height:43px;
+      display:grid;
+      place-items:center;
+      border-radius:14px;
+      background:#eaf7f9;
+      color:var(--primary);
+      font-size:18px;
+    }
+
+    .grid-2{
+      display:grid;
+      grid-template-columns:minmax(0,1.3fr) minmax(300px,.7fr);
+      gap:18px;
+    }
+
+    .card{
+      background:rgba(255,255,255,.93);
+      border:1px solid rgba(255,255,255,.86);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow-sm);
+      overflow:hidden;
+    }
+
+    .card-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+      padding:19px 20px;
+      border-bottom:1px solid var(--line);
+    }
+
+    .card-head h3{
+      margin:0;
+      font-size:16px;
+    }
+
+    .card-head p{
+      margin:4px 0 0;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .toolbar{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap;
+      padding:16px 18px;
+      border-bottom:1px solid var(--line);
+    }
+
+    .search{
+      position:relative;
+      min-width:270px;
+    }
+
+    .search span{
+      position:absolute;
+      left:13px;
+      top:11px;
+      opacity:.55;
+    }
+
+    input,select,textarea{
+      width:100%;
+      border:1px solid var(--line);
+      background:#fbfdfe;
+      color:var(--text);
+      border-radius:12px;
+      outline:none;
+    }
+
+    input,select{
+      min-height:42px;
+      padding:0 12px;
+    }
+
+    textarea{
+      min-height:100px;
+      padding:12px;
+      resize:vertical;
+    }
+
+    input:focus,select:focus,textarea:focus{
+      border-color:#78bdc5;
+      box-shadow:0 0 0 4px rgba(53,166,177,.09);
+    }
+
+    .search input{padding-left:38px}
+
+    .table-wrap{overflow:auto}
+
+    table{
+      width:100%;
+      min-width:800px;
+      border-collapse:collapse;
+    }
+
+    th,td{
+      padding:14px 16px;
+      border-bottom:1px solid #edf3f5;
+      text-align:left;
+      vertical-align:middle;
+      font-size:12px;
+    }
+
+    th{
+      background:#f9fcfd;
+      color:#62767d;
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.5px;
+    }
+
+    tbody tr:hover{background:#fbfeff}
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:5px;
+      padding:5px 9px;
+      border-radius:999px;
+      font-size:10px;
+      font-weight:850;
+    }
+
+    .badge-success{background:#eaf7f2;color:#2e7c66}
+    .badge-warning{background:#fff5e7;color:#996b28}
+    .badge-info{background:#eaf5fa;color:#357b94}
+    .badge-dark{background:#e9eef0;color:#425b63}
+
+    .profile-list{
+      display:grid;
+      gap:0;
+    }
+
+    .profile-row{
+      display:grid;
+      grid-template-columns:145px minmax(0,1fr);
+      gap:14px;
+      padding:13px 18px;
+      border-bottom:1px solid #edf3f5;
+      font-size:12px;
+    }
+
+    .profile-row span:first-child{
+      color:var(--muted);
+    }
+
+    .quick{
+      display:grid;
+      gap:10px;
+      padding:15px;
+    }
+
+    .quick button{
+      border:1px solid var(--line);
+      background:var(--panel-soft);
+      border-radius:15px;
+      padding:14px;
+      text-align:left;
+      color:var(--text);
+      transition:.2s ease;
+    }
+
+    .quick button:hover{
+      transform:translateY(-1px);
+      background:#eff9fa;
+      border-color:#bddde1;
+    }
+
+    .quick strong{
+      display:block;
+      font-size:13px;
+    }
+
+    .quick span{
+      display:block;
+      margin-top:3px;
+      color:var(--muted);
+      font-size:11px;
+    }
+
+    .section-title{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:12px;
+      margin-bottom:17px;
+    }
+
+    .section-title h3{
+      margin:0;
+      font-size:22px;
+    }
+
+    .section-title p{
+      margin:5px 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .empty{
+      padding:42px 20px;
+      text-align:center;
+      color:var(--muted);
+    }
+
+    .notice{
+      margin:16px 18px;
+      padding:13px 14px;
+      border:1px solid #d6e9ec;
+      border-radius:14px;
+      background:#f2fafb;
+      color:#4f6f76;
+      font-size:11px;
+      line-height:1.6;
+    }
+
+    .toast-wrap{
+      position:fixed;
+      top:20px;
+      right:20px;
+      z-index:300;
+      display:grid;
+      gap:9px;
+    }
+
+    .toast{
+      width:min(360px,calc(100vw - 40px));
+      padding:14px 16px;
+      border-radius:14px;
+      background:white;
+      border-left:4px solid var(--primary);
+      box-shadow:0 16px 44px rgba(9,30,38,.18);
+      font-size:12px;
+    }
+
+    .toast.success{border-color:var(--success)}
+    .toast.error{border-color:var(--danger)}
+
+    .loading{
+      position:fixed;
+      inset:0;
+      z-index:400;
+      display:none;
+      place-items:center;
+      background:rgba(237,247,248,.74);
+      backdrop-filter:blur(6px);
+    }
+
+    .loading.show{display:grid}
+
+    .loader-box{
+      padding:22px 28px;
+      background:white;
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+
+    .spinner{
+      width:34px;
+      height:34px;
+      margin:0 auto 12px;
+      border:4px solid #d7eaed;
+      border-top-color:var(--primary);
+      border-radius:50%;
+      animation:spin .75s linear infinite;
+    }
+
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    @media(max-width:1100px){
+      .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .grid-2,.hero{grid-template-columns:1fr}
+    }
+
+    @media(max-width:820px){
+      .app{grid-template-columns:1fr}
+
+      .sidebar{
+        position:fixed;
+        left:-290px;
+        width:270px;
+        transition:.25s ease;
+      }
+
+      .sidebar.open{left:0}
+
+      .main{padding:19px 16px 34px}
+      .mobile-menu{display:inline-flex}
+      .headline h2{font-size:23px}
+    }
+
+    @media(max-width:620px){
+      .stats{grid-template-columns:1fr}
+      .search{min-width:100%;width:100%}
+      .profile-row{grid-template-columns:1fr;gap:4px}
+      .top-actions .label{display:none}
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="loading" id="loading">
+  <div class="loader-box">
+    <div class="spinner"></div>
+    <strong>Memuat Dashboard Kepala Sekolah...</strong>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+
+    <div class="brand">
+      <div class="brand-mark">S</div>
+      <div>
+        <h1>SILAGU</h1>
+        <p>Dashboard Kepala Sekolah</p>
+      </div>
+    </div>
+
+    <div class="menu-label">MENU UTAMA</div>
+
+    <nav class="nav">
+      <button class="active" data-view="overview">
+        <span class="nav-icon">⌂</span>
+        Dashboard
+      </button>
+
+      <button data-view="teachers">
+        <span class="nav-icon">♧</span>
+        Data Guru
+      </button>
+
+      <button data-view="school">
+        <span class="nav-icon">▦</span>
+        Profil Sekolah
+      </button>
+
+      <button data-view="supervision">
+        <span class="nav-icon">✓</span>
+        Supervisi
+      </button>
+    </nav>
+
+    <div class="menu-label">SISTEM</div>
+
+    <nav class="nav">
+      <button onclick="refreshAll()">
+        <span class="nav-icon">↻</span>
+        Segarkan Data
+      </button>
+
+      <button onclick="logout()">
+        <span class="nav-icon">⇥</span>
+        Keluar
+      </button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="mini-profile">
+        <strong id="sidebarName">Kepala Sekolah</strong>
+        <span>KEPALA SEKOLAH</span>
+      </div>
+    </div>
+
+  </aside>
+
+  <main class="main">
+
+    <header class="topbar">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <button class="icon-btn mobile-menu" onclick="toggleSidebar()">☰</button>
+
+        <div class="headline">
+          <h2 id="pageTitle">Dashboard Kepala Sekolah</h2>
+          <p id="pageSubtitle">Pantau data sekolah dan guru dari satu halaman.</p>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <button class="icon-btn" onclick="refreshAll()">↻ <span class="label">Refresh</span></button>
+        <button class="btn btn-primary" onclick="showView('teachers')">Data Guru</button>
+      </div>
+    </header>
+
+
+    <section class="view active" id="view-overview">
+
+      <div class="hero">
+
+        <div class="welcome">
+          <small>SELAMAT DATANG DI SILAGU</small>
+          <h3 id="welcomeName">Halo, Kepala Sekolah 👋</h3>
+          <p>
+            Gunakan dashboard ini untuk memantau profil sekolah, data guru,
+            dan perkembangan administrasi sekolah. Backend halaman ini terpisah
+            dari API login dan SUPERADMIN.
+          </p>
+        </div>
+
+        <div class="school-card">
+          <div class="eyebrow">SEKOLAH ANDA</div>
+          <h3 id="heroSchoolName">Memuat...</h3>
+          <p id="heroSchoolAddress">-</p>
+          <span class="school-badge" id="heroSchoolStatus">AKTIF</span>
+        </div>
+
+      </div>
+
+      <div class="stats">
+
+        <div class="stat">
+          <div class="stat-top">
+            <div>
+              <div class="stat-label">Total Guru</div>
+              <span class="stat-number" id="statTeachers">0</span>
+            </div>
+            <div class="stat-icon">♧</div>
+          </div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-top">
+            <div>
+              <div class="stat-label">Guru Aktif</div>
+              <span class="stat-number" id="statActiveTeachers">0</span>
+            </div>
+            <div class="stat-icon">✓</div>
+          </div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-top">
+            <div>
+              <div class="stat-label">Akun Guru</div>
+              <span class="stat-number" id="statTeacherAccounts">0</span>
+            </div>
+            <div class="stat-icon">♙</div>
+          </div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-top">
+            <div>
+              <div class="stat-label">Status API</div>
+              <span class="stat-number" style="font-size:20px" id="statApi">Aktif</span>
+            </div>
+            <div class="stat-icon">◉</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="grid-2">
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3>Guru di Sekolah</h3>
+              <p>Ringkasan data guru yang terhubung ke sekolah Anda.</p>
+            </div>
+
+            <button class="btn btn-soft" onclick="showView('teachers')">
+              Lihat semua
+            </button>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nama Guru</th>
+                  <th>NIP</th>
+                  <th>Jabatan</th>
+                  <th>Kelas</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="overviewTeachers"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3>Akses Cepat</h3>
+              <p>Fungsi utama Kepala Sekolah</p>
+            </div>
+          </div>
+
+          <div class="quick">
+            <button onclick="showView('teachers')">
+              <strong>♧ Pantau data guru</strong>
+              <span>Lihat guru yang terhubung ke sekolah.</span>
+            </button>
+
+            <button onclick="showView('school')">
+              <strong>▦ Profil sekolah</strong>
+              <span>Lihat identitas dan data sekolah.</span>
+            </button>
+
+            <button onclick="showView('supervision')">
+              <strong>✓ Supervisi akademik</strong>
+              <span>Area persiapan verifikasi administrasi guru.</span>
+            </button>
+
+            <button onclick="refreshAll()">
+              <strong>↻ Sinkronkan data</strong>
+              <span>Ambil data terbaru dari Spreadsheet SILAGU.</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="view" id="view-teachers">
+
+      <div class="section-title">
+        <div>
+          <h3>Data Guru</h3>
+          <p>Daftar guru pada sekolah yang terhubung dengan akun Kepala Sekolah.</p>
+        </div>
+      </div>
+
+      <div class="card">
+
+        <div class="toolbar">
+          <div class="search">
+            <span>⌕</span>
+            <input
+              id="teacherSearch"
+              type="search"
+              placeholder="Cari nama, NIP, kelas, jabatan..."
+              oninput="renderTeachers()"
+            >
+          </div>
+
+          <select id="teacherStatusFilter" onchange="renderTeachers()" style="width:170px">
+            <option value="">Semua status</option>
+            <option value="AKTIF">Aktif</option>
+            <option value="NONAKTIF">Nonaktif</option>
+          </select>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID Guru</th>
+                <th>Nama Guru</th>
+                <th>NIP</th>
+                <th>NUPTK</th>
+                <th>Jabatan</th>
+                <th>Kelas</th>
+                <th>Email</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="teacherTable"></tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="view" id="view-school">
+
+      <div class="section-title">
+        <div>
+          <h3>Profil Sekolah</h3>
+          <p>Identitas sekolah berdasarkan sheet SEKOLAH.</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3>Identitas Sekolah</h3>
+              <p>Data utama sekolah Anda.</p>
+            </div>
+          </div>
+
+          <div class="profile-list" id="schoolProfile"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3>Identitas Kepala Sekolah</h3>
+              <p>Informasi akun Kepala Sekolah.</p>
+            </div>
+          </div>
+
+          <div class="profile-list" id="principalProfile"></div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="view" id="view-supervision">
+
+      <div class="section-title">
+        <div>
+          <h3>Supervisi Akademik</h3>
+          <p>Area Kepala Sekolah untuk pemantauan dan verifikasi administrasi guru.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="notice">
+          Modul supervisi telah disiapkan pada dashboard, tetapi data dokumen administrasi,
+          persentase kelengkapan, catatan verifikasi, dan status revisi memerlukan sheet
+          administrasi/supervisi tersendiri. Versi ini belum membuat data fiktif agar
+          database SILAGU tetap bersih.
+        </div>
+
+        <div class="quick">
+          <button onclick="showView('teachers')">
+            <strong>1. Pilih guru</strong>
+            <span>Lihat daftar guru yang akan dipantau.</span>
+          </button>
+
+          <button disabled style="opacity:.62;cursor:not-allowed">
+            <strong>2. Kelengkapan administrasi</strong>
+            <span>Akan aktif setelah sheet administrasi guru dibuat.</span>
+          </button>
+
+          <button disabled style="opacity:.62;cursor:not-allowed">
+            <strong>3. Verifikasi & catatan</strong>
+            <span>Akan aktif setelah struktur supervisi ditambahkan.</span>
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+</div>
+
+
+<script>
+/*
+  ============================================================
+  API KHUSUS DASHBOARD KEPALA SEKOLAH
+  ============================================================
+
+  SETELAH Code.gs Kepala Sekolah di-deploy sebagai Web App baru,
+  ganti nilai di bawah dengan URL deployment BARU.
+
+  Contoh:
+  https://script.google.com/macros/s/AKfycbxxxxxxxxxxxxxxxx/exec
+*/
+
+const API_URL = "GANTI_DENGAN_API_URL_KEPALA_SEKOLAH_BARU";
+
+const TOKEN_KEY = "silagu_token";
+const USER_KEY = "silagu_user";
+
+let currentUser = null;
+let school = null;
+let teachers = [];
+let dashboardStats = {};
+
+const viewMeta = {
+  overview:{
+    title:"Dashboard Kepala Sekolah",
+    subtitle:"Pantau data sekolah dan guru dari satu halaman."
+  },
+  teachers:{
+    title:"Data Guru",
+    subtitle:"Guru yang terhubung dengan sekolah Anda."
+  },
+  school:{
+    title:"Profil Sekolah",
+    subtitle:"Identitas sekolah dan Kepala Sekolah."
+  },
+  supervision:{
+    title:"Supervisi Akademik",
+    subtitle:"Persiapan pemantauan dan verifikasi administrasi guru."
+  }
+};
+
+
+document.addEventListener("DOMContentLoaded",init);
+
+
+async function init(){
+  const token = localStorage.getItem(TOKEN_KEY);
+
+  if(!token){
+    goLogin();
+    return;
+  }
+
+  if(
+    !API_URL ||
+    API_URL.includes("GANTI_DENGAN_API_URL")
+  ){
+    alert(
+      "API Kepala Sekolah belum diisi.\n\n" +
+      "Deploy Code.gs Kepala Sekolah terlebih dahulu, lalu ganti API_URL pada dashboard-kepsek.html."
+    );
+    return;
+  }
+
+  setLoading(true);
+
+  try{
+    const validation = await apiPost({
+      action:"validateSession",
+      token
+    });
+
+    if(!validation.success || !validation.valid){
+      clearSession();
+      goLogin();
+      return;
+    }
+
+    const me = await apiPost({
+      action:"getCurrentUser",
+      token
+    });
+
+    if(!me.success || !me.user){
+      throw new Error(
+        me.message || "Gagal membaca akun Kepala Sekolah."
+      );
+    }
+
+    if(me.user.role !== "KEPALA_SEKOLAH"){
+      clearSession();
+      goLogin();
+      return;
+    }
+
+    currentUser = me.user;
+    localStorage.setItem(
+      USER_KEY,
+      JSON.stringify(currentUser)
+    );
+
+    setText(
+      "sidebarName",
+      currentUser.nama || currentUser.username
+    );
+
+    setText(
+      "welcomeName",
+      "Halo, " +
+      (currentUser.nama || "Kepala Sekolah") +
+      " 👋"
+    );
+
+    await refreshAll(false);
+
+  }catch(error){
+    showToast(
+      error.message || "Gagal memuat dashboard.",
+      "error"
+    );
+  }finally{
+    setLoading(false);
+  }
+}
+
+
+async function apiPost(payload){
+  let response;
+
+  try{
+    response = await fetch(API_URL,{
+      method:"POST",
+      body:JSON.stringify(payload),
+      cache:"no-store"
+    });
+  }catch(error){
+    throw new Error(
+      "Tidak dapat menghubungi API Kepala Sekolah."
+    );
+  }
+
+  const text = await response.text();
+
+  if(!text){
+    throw new Error(
+      "Server Kepala Sekolah tidak mengirim respons."
+    );
+  }
+
+  try{
+    return JSON.parse(text);
+  }catch(error){
+    console.error("Respons API:",text);
+    throw new Error(
+      "Respons API Kepala Sekolah bukan JSON."
+    );
+  }
+}
+
+
+async function refreshAll(showLoader=true){
+  if(showLoader) setLoading(true);
+
+  try{
+    const token = localStorage.getItem(TOKEN_KEY);
+
+    const [
+      dashboardRes,
+      teachersRes
+    ] = await Promise.all([
+      apiPost({
+        action:"getDashboardKepsek",
+        token
+      }),
+      apiPost({
+        action:"getTeachersBySchool",
+        token
+      })
+    ]);
+
+    if(!dashboardRes.success){
+      throw new Error(
+        dashboardRes.message ||
+        "Gagal mengambil data dashboard."
+      );
+    }
+
+    if(!teachersRes.success){
+      throw new Error(
+        teachersRes.message ||
+        "Gagal mengambil data guru."
+      );
+    }
+
+    dashboardStats = dashboardRes.stats || {};
+    school = dashboardRes.school || null;
+    currentUser = dashboardRes.user || currentUser;
+    teachers = teachersRes.data || [];
+
+    renderDashboard();
+    renderTeachers();
+    renderOverviewTeachers();
+    renderProfiles();
+
+    await checkApi();
+
+  }catch(error){
+    showToast(
+      error.message || "Gagal memperbarui data.",
+      "error"
+    );
+
+    if(/session|token|akses/i.test(error.message || "")){
+      clearSession();
+      setTimeout(goLogin,700);
+    }
+
+  }finally{
+    if(showLoader) setLoading(false);
+  }
+}
+
+
+async function checkApi(){
+  try{
+    const response = await fetch(
+      API_URL + "?action=ping&_=" + Date.now(),
+      {cache:"no-store"}
+    );
+
+    const data = await response.json();
+
+    setText(
+      "statApi",
+      data.success ? "Aktif" : "Gangguan"
+    );
+
+  }catch(error){
+    setText("statApi","Offline");
+  }
+}
+
+
+function renderDashboard(){
+  setText(
+    "statTeachers",
+    dashboardStats.total_guru || 0
+  );
+
+  setText(
+    "statActiveTeachers",
+    dashboardStats.guru_aktif || 0
+  );
+
+  setText(
+    "statTeacherAccounts",
+    dashboardStats.akun_guru || 0
+  );
+
+  if(school){
+    setText(
+      "heroSchoolName",
+      school.nama_sekolah || school.id_sekolah || "-"
+    );
+
+    const address = [
+      school.alamat,
+      school.desa,
+      school.kecamatan
+    ].filter(Boolean).join(", ");
+
+    setText(
+      "heroSchoolAddress",
+      address || "-"
+    );
+
+    setText(
+      "heroSchoolStatus",
+      school.status || "-"
+    );
+  }
+}
+
+
+function renderOverviewTeachers(){
+  const tbody =
+    document.getElementById("overviewTeachers");
+
+  const data = teachers.slice(0,6);
+
+  if(!data.length){
+    tbody.innerHTML =
+      `<tr><td colspan="5" class="empty">Belum ada data guru.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = data.map(g=>`
+    <tr>
+      <td><strong>${esc(g.nama_guru || g.nama || "-")}</strong></td>
+      <td>${esc(g.nip || "-")}</td>
+      <td>${esc(g.jabatan || "-")}</td>
+      <td>${esc(g.kelas || "-")}</td>
+      <td>${statusBadge(g.status)}</td>
+    </tr>
+  `).join("");
+}
+
+
+function renderTeachers(){
+  const tbody =
+    document.getElementById("teacherTable");
+
+  const query =
+    (document.getElementById("teacherSearch")?.value || "")
+      .trim()
+      .toLowerCase();
+
+  const status =
+    document.getElementById("teacherStatusFilter")?.value || "";
+
+  const filtered = teachers.filter(g=>{
+    const haystack = [
+      g.id_guru,
+      g.nama_guru,
+      g.nip,
+      g.nuptk,
+      g.jabatan,
+      g.kelas,
+      g.email
+    ].join(" ").toLowerCase();
+
+    return (
+      (!query || haystack.includes(query)) &&
+      (!status ||
+        String(g.status || "").toUpperCase() === status)
+    );
+  });
+
+  if(!filtered.length){
+    tbody.innerHTML =
+      `<tr><td colspan="8" class="empty">Data guru tidak ditemukan.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(g=>`
+    <tr>
+      <td>${esc(g.id_guru || "-")}</td>
+      <td><strong>${esc(g.nama_guru || "-")}</strong></td>
+      <td>${esc(g.nip || "-")}</td>
+      <td>${esc(g.nuptk || "-")}</td>
+      <td>${esc(g.jabatan || "-")}</td>
+      <td>${esc(g.kelas || "-")}</td>
+      <td>${esc(g.email || "-")}</td>
+      <td>${statusBadge(g.status)}</td>
+    </tr>
+  `).join("");
+}
+
+
+function renderProfiles(){
+  const schoolEl =
+    document.getElementById("schoolProfile");
+
+  const principalEl =
+    document.getElementById("principalProfile");
+
+  if(!school){
+    schoolEl.innerHTML =
+      `<div class="empty">Data sekolah tidak ditemukan.</div>`;
+  }else{
+    schoolEl.innerHTML = [
+      ["ID Sekolah",school.id_sekolah],
+      ["NPSN",school.npsn],
+      ["Nama Sekolah",school.nama_sekolah],
+      ["Alamat",school.alamat],
+      ["Desa",school.desa],
+      ["Kecamatan",school.kecamatan],
+      ["Email",school.email],
+      ["Status",school.status]
+    ].map(item=>profileRow(item[0],item[1])).join("");
+  }
+
+  principalEl.innerHTML = [
+    ["Nama",currentUser?.nama || school?.nama_kepala_sekolah],
+    ["NIP",currentUser?.nip || school?.nip_kepala_sekolah],
+    ["Username",currentUser?.username],
+    ["Email",currentUser?.email],
+    ["Role",currentUser?.role],
+    ["Status",currentUser?.status]
+  ].map(item=>profileRow(item[0],item[1])).join("");
+}
+
+
+function profileRow(label,value){
+  return `
+    <div class="profile-row">
+      <span>${esc(label)}</span>
+      <strong>${esc(value || "-")}</strong>
+    </div>
+  `;
+}
+
+
+function showView(name){
+  document.querySelectorAll(".view").forEach(el=>
+    el.classList.remove("active")
+  );
+
+  document.querySelectorAll(".nav button[data-view]").forEach(el=>
+    el.classList.toggle(
+      "active",
+      el.dataset.view === name
+    )
+  );
+
+  document.getElementById("view-" + name)
+    ?.classList.add("active");
+
+  const meta = viewMeta[name] || viewMeta.overview;
+
+  setText("pageTitle",meta.title);
+  setText("pageSubtitle",meta.subtitle);
+
+  document.getElementById("sidebar")
+    .classList.remove("open");
+}
+
+
+document.querySelectorAll(".nav button[data-view]").forEach(button=>{
+  button.addEventListener("click",()=>{
+    showView(button.dataset.view);
+  });
+});
+
+
+function toggleSidebar(){
+  document.getElementById("sidebar")
+    .classList.toggle("open");
+}
+
+
+async function logout(){
+  /*
+    Logout utama tetap ditangani API login lama.
+    Karena dashboard kepsek memakai API terpisah,
+    kita cukup membersihkan session lokal dan kembali ke login.
+    Session server akan kedaluwarsa sesuai SESSION_HOURS.
+  */
+
+  clearSession();
+  goLogin();
+}
+
+
+function clearSession(){
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(USER_KEY);
+  localStorage.removeItem("silagu_expires_at");
+}
+
+
+function goLogin(){
+  window.location.href = "login.html";
+}
+
+
+function statusBadge(status){
+  const value =
+    String(status || "").toUpperCase();
+
+  const cls =
+    value === "AKTIF"
+      ? "badge-success"
+      : value === "NONAKTIF"
+      ? "badge-warning"
+      : "badge-dark";
+
+  return `
+    <span class="badge ${cls}">
+      ${esc(value || "-")}
+    </span>
+  `;
+}
+
+
+function setLoading(state){
+  document.getElementById("loading")
+    .classList.toggle("show",!!state);
+}
+
+
+function showToast(message,type=""){
+  const wrap =
+    document.getElementById("toastWrap");
+
+  const toast =
+    document.createElement("div");
+
+  toast.className = "toast " + type;
+  toast.textContent = message;
+
+  wrap.appendChild(toast);
+
+  setTimeout(()=>{
+    toast.remove();
+  },3500);
+}
+
+
+function setText(id,text){
+  const el =
+    document.getElementById(id);
+
+  if(el){
+    el.textContent = text ?? "";
+  }
+}
+
+
+function esc(value){
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+</script>
+
+</body>
+</html>
