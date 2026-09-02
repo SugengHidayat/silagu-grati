@@ -224,6 +224,43 @@
       border-color:#d5e9ec;
     }
 
+    .btn-success{
+      background:linear-gradient(135deg,#2f8b69,#43a57f);
+      color:white;
+      border-color:transparent;
+    }
+
+    .btn-success:hover{
+      border-color:transparent;
+    }
+
+    .field-label{
+      display:block;
+      margin:0 0 6px;
+      color:var(--muted);
+      font-size:10px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.45px;
+    }
+
+    .readonly-field{
+      background:#eef3f5 !important;
+      color:#657a80 !important;
+      cursor:not-allowed;
+    }
+
+    .edit-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .edit-field.full{
+      grid-column:1/-1;
+    }
+
+
     .mobile-menu{display:none}
 
     .view{display:none}
@@ -783,6 +820,8 @@
       .profile-row{grid-template-columns:1fr;gap:4px}
       .detail-grid{grid-template-columns:1fr}
       .detail-item.full{grid-column:auto}
+      .edit-grid{grid-template-columns:1fr}
+      .edit-field.full{grid-column:auto}
       .top-actions .label{display:none}
     }
   </style>
@@ -1091,7 +1130,7 @@
               <p>Informasi ringkas akun dan profil Kepala Sekolah.</p>
             </div>
 
-            <button class="btn btn-soft" onclick="openPrincipalModal()">
+            <button class="btn btn-success" onclick="openPrincipalModal()">
               Lihat
             </button>
           </div>
@@ -1171,11 +1210,109 @@
 
       <div class="detail-grid" id="principalDetailGrid"></div>
 
+      <form class="edit-grid" id="principalEditForm" style="display:none" onsubmit="savePrincipalProfile(event)">
+        <div class="edit-field">
+          <label class="field-label">ID User</label>
+          <input id="editIdUser" class="readonly-field" type="text" readonly>
+        </div>
+
+        <div class="edit-field">
+          <label class="field-label">ID Sekolah</label>
+          <input id="editIdSekolah" class="readonly-field" type="text" readonly>
+        </div>
+
+        <div class="edit-field">
+          <label class="field-label">Nama Lengkap</label>
+          <input id="editNama" type="text" required>
+        </div>
+
+        <div class="edit-field">
+          <label class="field-label">NIP</label>
+          <input id="editNip" type="text">
+        </div>
+
+        <div class="edit-field">
+          <label class="field-label">NUPTK</label>
+          <input id="editNuptk" type="text">
+        </div>
+
+        <div class="edit-field">
+          <label class="field-label">Jenis Kelamin</label>
+          <select id="editJenisKelamin">
+            <option value="">Pilih</option>
+            <option value="L">Laki-laki</option>
+            <option value="P">Perempuan</option>
+          </select>
+        </div>
+
+        <div class="edit-field">
+          <label class="field-label">Tempat Lahir</label>
+          <input id="editTempatLahir" type="text">
+        </div>
+
+        <div class="edit-field">
+          <label class="field-label">Tanggal Lahir</label>
+          <input id="editTanggalLahir" type="date">
+        </div>
+
+        <div class="edit-field">
+          <label class="field-label">Pangkat</label>
+          <input id="editPangkat" type="text">
+        </div>
+
+        <div class="edit-field">
+          <label class="field-label">Golongan</label>
+          <input id="editGolongan" type="text">
+        </div>
+
+        <div class="edit-field">
+          <label class="field-label">Jabatan</label>
+          <input id="editJabatan" type="text">
+        </div>
+
+        <div class="edit-field">
+          <label class="field-label">Pendidikan Terakhir</label>
+          <input id="editPendidikanTerakhir" type="text">
+        </div>
+
+        <div class="edit-field">
+          <label class="field-label">Email</label>
+          <input id="editEmail" type="email">
+        </div>
+
+        <div class="edit-field">
+          <label class="field-label">No. HP</label>
+          <input id="editNoHp" type="text">
+        </div>
+
+        <div class="edit-field full">
+          <label class="field-label">Alamat</label>
+          <textarea id="editAlamat"></textarea>
+        </div>
+
+        <div class="edit-field">
+          <label class="field-label">Tanggal Mulai Tugas</label>
+          <input id="editTanggalMulaiTugas" type="date">
+        </div>
+
+        <div class="edit-field">
+          <label class="field-label">Status</label>
+          <select id="editStatus">
+            <option value="AKTIF">AKTIF</option>
+            <option value="NONAKTIF">NONAKTIF</option>
+          </select>
+        </div>
+      </form>
+
     </div>
 
     <div class="modal-foot">
-      <button class="btn btn-primary" onclick="closePrincipalModal()">
-        Tutup
+      <button class="btn btn-soft" id="principalEditBtn" onclick="enablePrincipalEdit()">
+        Edit
+      </button>
+
+      <button class="btn btn-primary" id="principalSaveBtn" style="display:none" onclick="document.getElementById('principalEditForm').requestSubmit()">
+        Simpan
       </button>
     </div>
 
@@ -1592,6 +1729,139 @@ function profileRow(label,value){
 
 
 
+
+function toInputDate(value){
+  if(!value){
+    return "";
+  }
+
+  const date = new Date(value);
+
+  if(isNaN(date.getTime())){
+    const raw = String(value).trim();
+    return /^\d{4}-\d{2}-\d{2}$/.test(raw) ? raw : "";
+  }
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth()+1).padStart(2,"0");
+  const day = String(date.getDate()).padStart(2,"0");
+
+  return `${year}-${month}-${day}`;
+}
+
+
+function fillPrincipalEditForm(){
+  const p = principalData || {};
+
+  setInputValue("editIdUser", p.id_user || currentUser?.id_user || "");
+  setInputValue("editIdSekolah", p.id_sekolah || currentUser?.id_sekolah || "");
+  setInputValue("editNama", p.nama_kepala_sekolah || currentUser?.nama || "");
+  setInputValue("editNip", p.nip || currentUser?.nip || "");
+  setInputValue("editNuptk", p.nuptk || "");
+  setInputValue("editJenisKelamin", p.jenis_kelamin || "");
+  setInputValue("editTempatLahir", p.tempat_lahir || "");
+  setInputValue("editTanggalLahir", toInputDate(p.tanggal_lahir));
+  setInputValue("editPangkat", p.pangkat || "");
+  setInputValue("editGolongan", p.golongan || "");
+  setInputValue("editJabatan", p.jabatan || "Kepala Sekolah");
+  setInputValue("editPendidikanTerakhir", p.pendidikan_terakhir || "");
+  setInputValue("editEmail", p.email || currentUser?.email || "");
+  setInputValue("editNoHp", p.no_hp || "");
+  setInputValue("editAlamat", p.alamat || "");
+  setInputValue("editTanggalMulaiTugas", toInputDate(p.tanggal_mulai_tugas));
+  setInputValue("editStatus", p.status || currentUser?.status || "AKTIF");
+}
+
+
+function enablePrincipalEdit(){
+  fillPrincipalEditForm();
+
+  document.getElementById("principalDetailGrid").style.display = "none";
+  document.getElementById("principalEditForm").style.display = "grid";
+  document.getElementById("principalEditBtn").style.display = "none";
+  document.getElementById("principalSaveBtn").style.display = "inline-flex";
+}
+
+
+async function savePrincipalProfile(event){
+  event.preventDefault();
+
+  const token = localStorage.getItem(TOKEN_KEY);
+
+  const payload = {
+    action:"savePrincipalProfile",
+    token,
+
+    /*
+      id_user dan id_sekolah dikirim hanya sebagai tampilan referensi.
+      Backend TIDAK mempercayai nilai ini dan selalu mengambil keduanya
+      dari sheet PENGGUNA berdasarkan session.
+    */
+    id_user: document.getElementById("editIdUser").value,
+    id_sekolah: document.getElementById("editIdSekolah").value,
+
+    nama_kepala_sekolah: document.getElementById("editNama").value.trim(),
+    nip: document.getElementById("editNip").value.trim(),
+    nuptk: document.getElementById("editNuptk").value.trim(),
+    jenis_kelamin: document.getElementById("editJenisKelamin").value,
+    tempat_lahir: document.getElementById("editTempatLahir").value.trim(),
+    tanggal_lahir: document.getElementById("editTanggalLahir").value,
+    pangkat: document.getElementById("editPangkat").value.trim(),
+    golongan: document.getElementById("editGolongan").value.trim(),
+    jabatan: document.getElementById("editJabatan").value.trim(),
+    pendidikan_terakhir: document.getElementById("editPendidikanTerakhir").value.trim(),
+    email: document.getElementById("editEmail").value.trim(),
+    no_hp: document.getElementById("editNoHp").value.trim(),
+    alamat: document.getElementById("editAlamat").value.trim(),
+    tanggal_mulai_tugas: document.getElementById("editTanggalMulaiTugas").value,
+    status: document.getElementById("editStatus").value
+  };
+
+  setLoading(true);
+
+  try{
+    const result = await apiPost(payload);
+
+    if(!result.success){
+      throw new Error(
+        result.message || "Gagal menyimpan profil Kepala Sekolah."
+      );
+    }
+
+    principalData = result.data || principalData;
+
+    renderPrincipalModal();
+    renderProfiles();
+
+    document.getElementById("principalDetailGrid").style.display = "grid";
+    document.getElementById("principalEditForm").style.display = "none";
+    document.getElementById("principalEditBtn").style.display = "inline-flex";
+    document.getElementById("principalSaveBtn").style.display = "none";
+
+    showToast(
+      "Data Kepala Sekolah berhasil disimpan.",
+      "success"
+    );
+
+  }catch(error){
+    showToast(
+      error.message || "Gagal menyimpan data.",
+      "error"
+    );
+  }finally{
+    setLoading(false);
+  }
+}
+
+
+function setInputValue(id,value){
+  const el = document.getElementById(id);
+  if(el){
+    el.value = value ?? "";
+  }
+}
+
+
 async function openPrincipalModal(){
   const token =
     localStorage.getItem(TOKEN_KEY);
@@ -1619,6 +1889,11 @@ async function openPrincipalModal(){
       result.data || {};
 
     renderPrincipalModal();
+
+    document.getElementById("principalDetailGrid").style.display = "grid";
+    document.getElementById("principalEditForm").style.display = "none";
+    document.getElementById("principalEditBtn").style.display = "inline-flex";
+    document.getElementById("principalSaveBtn").style.display = "none";
 
     document
       .getElementById("principalModal")
