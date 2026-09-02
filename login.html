@@ -1,113 +1,520 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Login SILAGU</title>
-<style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial;background:linear-gradient(135deg,#eaf2f8,#f8fbfd);min-height:100vh;display:grid;place-items:center;padding:20px;color:#1f2937}
-.wrap{width:min(960px,100%);display:grid;grid-template-columns:1fr 1fr;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 25px 70px #0f4c8128}
-.brand{background:linear-gradient(145deg,#0a365c,#0f4c81,#1d7a8c);color:#fff;padding:50px;display:flex;flex-direction:column;justify-content:center}
-.logo{width:72px;height:72px;border-radius:18px;background:#fff;color:#0f4c81;display:grid;place-items:center;font-size:30px;font-weight:800;margin-bottom:24px}
-.brand h1{font-size:42px;margin:0 0 10px}.brand p{line-height:1.6;opacity:.9}
-.panel{padding:48px;display:flex;align-items:center}.box{width:100%}h2{color:#0a365c;margin-top:0}
-label{display:block;font-weight:700;font-size:13px;margin:15px 0 7px}input{width:100%;padding:14px;border:1px solid #dbe5ee;border-radius:12px;font-size:15px;outline:none}input:focus{border-color:#0f4c81;box-shadow:0 0 0 3px #0f4c8115}
-.pass{position:relative}.pass button{position:absolute;right:8px;top:7px;border:0;background:transparent;cursor:pointer;padding:8px;color:#64748b;font-weight:700}
-.btn{width:100%;padding:14px;border-radius:12px;border:0;font-weight:800;cursor:pointer;font-size:15px;margin-top:16px}
-.primary{background:linear-gradient(135deg,#0f4c81,#1d7a8c);color:#fff}.secondary{background:#fff;color:#0f4c81;border:1px solid #b8ccd9;margin-top:10px}
-.msg{display:none;margin:14px 0;padding:12px;border-radius:10px;font-size:13px;line-height:1.5}.msg.ok{display:block;background:#e9f7ef;color:#146c43;border:1px solid #b7e4c7}.msg.err{display:block;background:#fdecea;color:#8f2d22;border:1px solid #f4c7c3}
-.status{margin-top:16px;font-size:12px;color:#64748b}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#94a3b8;margin-right:6px}.online{background:#198754}
-.modal{display:none;position:fixed;inset:0;background:#0f172a99;align-items:center;justify-content:center;padding:20px;z-index:10}.modal.show{display:flex}
-.card{width:min(520px,100%);background:#fff;border-radius:18px;padding:26px;max-height:92vh;overflow:auto}.head{display:flex;justify-content:space-between;gap:15px;align-items:start}.x{border:0;background:#eef4f8;width:34px;height:34px;border-radius:9px;font-size:20px;cursor:pointer}
-.hint{font-size:12px;color:#64748b;line-height:1.55;margin-top:7px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media(max-width:760px){.wrap{grid-template-columns:1fr}.brand{padding:30px}.panel{padding:30px}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f4c81">
+  <title>Login SILAGU</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary:#0f4c81;
+      --primary-dark:#0a365c;
+      --secondary:#1d7a8c;
+      --success:#198754;
+      --danger:#c0392b;
+      --muted:#64748b;
+      --border:#dbe5ee;
+      --bg:#eef4f8;
+    }
+    body {
+      min-height:100vh;
+      font-family:Arial,Helvetica,sans-serif;
+      color:#1f2937;
+      background:
+        radial-gradient(circle at top left, rgba(29,122,140,.16), transparent 30%),
+        linear-gradient(135deg,#eef5fa,#f8fbfd 55%,#e8f1f7);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+    .app-shell {
+      width:100%;
+      max-width:980px;
+      min-height:590px;
+      background:#fff;
+      border-radius:26px;
+      overflow:hidden;
+      box-shadow:0 24px 70px rgba(15,76,129,.16);
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      border:1px solid rgba(255,255,255,.85);
+    }
+    .brand-panel {
+      position:relative;
+      padding:56px 48px;
+      color:#fff;
+      background:linear-gradient(145deg,#093459,#0f4c81 55%,#1d7a8c);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      overflow:hidden;
+    }
+    .brand-panel::before,.brand-panel::after {
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      background:rgba(255,255,255,.08);
+    }
+    .brand-panel::before { width:300px;height:300px;top:-110px;right:-100px; }
+    .brand-panel::after { width:210px;height:210px;bottom:-75px;left:-65px; }
+    .brand-content,.brand-footer { position:relative;z-index:2; }
+    .logo {
+      width:74px;height:74px;border-radius:20px;
+      background:#fff;color:var(--primary);
+      display:grid;place-items:center;
+      font-size:30px;font-weight:800;
+      margin-bottom:30px;
+      box-shadow:0 12px 32px rgba(0,0,0,.13);
+    }
+    .brand-panel h1 { font-size:42px;margin-bottom:12px; }
+    .subtitle { font-size:18px;line-height:1.6;color:rgba(255,255,255,.88); }
+    .roles {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;margin-top:30px;
+    }
+    .role-chip {
+      padding:10px 12px;border-radius:12px;
+      background:rgba(255,255,255,.11);
+      border:1px solid rgba(255,255,255,.16);
+      font-size:13px;
+    }
+    .brand-footer { font-size:12px;color:rgba(255,255,255,.72);line-height:1.6; }
+    .login-panel {
+      padding:54px 48px;
+      display:flex;
+      align-items:center;
+      background:rgba(255,255,255,.98);
+    }
+    .login-box { width:100%;max-width:390px;margin:0 auto; }
+    .login-box h2 { font-size:28px;color:var(--primary-dark);margin-bottom:8px; }
+    .login-box > p { color:var(--muted);line-height:1.6;margin-bottom:28px;font-size:14px; }
+    .form-group { margin-bottom:18px; }
+    label { display:block;font-weight:700;font-size:13px;margin-bottom:8px;color:#334155; }
+    input {
+      width:100%;
+      border:1px solid var(--border);
+      outline:none;
+      padding:14px 44px 14px 15px;
+      border-radius:12px;
+      font-size:15px;
+      background:#fff;
+      color:#1f2937;
+      transition:.2s;
+    }
+    input:focus { border-color:#5e9bc6;box-shadow:0 0 0 4px rgba(15,76,129,.09); }
+    .input-wrap { position:relative; }
+    .toggle-password {
+      position:absolute;right:10px;top:50%;transform:translateY(-50%);
+      border:0;background:transparent;color:var(--muted);
+      cursor:pointer;padding:6px;font-size:11px;font-weight:800;
+    }
+    .options {
+      display:flex;align-items:center;justify-content:space-between;
+      gap:12px;margin-bottom:20px;font-size:13px;color:var(--muted);
+    }
+    .remember { display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:normal; }
+    .remember input { width:16px;height:16px;accent-color:var(--primary);padding:0; }
+    .btn {
+      width:100%;border:0;padding:15px 18px;border-radius:12px;
+      font-size:15px;font-weight:800;cursor:pointer;transition:.2s;
+    }
+    .btn:disabled { opacity:.65;cursor:not-allowed; }
+    .btn-primary {
+      background:linear-gradient(135deg,var(--primary),var(--secondary));
+      color:#fff;box-shadow:0 10px 24px rgba(15,76,129,.20);
+    }
+    .btn-secondary {
+      margin-top:11px;background:#fff;color:var(--primary);
+      border:1px solid #b8ccd9;
+    }
+    .message {
+      display:none;margin-bottom:18px;padding:12px 13px;
+      border-radius:10px;font-size:13px;line-height:1.5;
+    }
+    .message.error { display:block;color:#8f2d22;background:#fdecea;border:1px solid #f4c7c3; }
+    .message.success { display:block;color:#146c43;background:#e9f7ef;border:1px solid #b7e4c7; }
+    .message.info { display:block;color:#665600;background:#fff8dc;border:1px solid #f0dfa1; }
+    .system-status {
+      margin-top:18px;font-size:12px;color:var(--muted);
+      display:flex;align-items:center;gap:7px;
+    }
+    .dot { width:9px;height:9px;border-radius:50%;background:#94a3b8; }
+    .dot.online { background:var(--success);box-shadow:0 0 0 4px rgba(25,135,84,.10); }
+    .modal {
+      display:none;position:fixed;inset:0;background:rgba(15,23,42,.62);
+      z-index:99;padding:20px;align-items:center;justify-content:center;
+    }
+    .modal.show { display:flex; }
+    .modal-card {
+      width:100%;max-width:520px;max-height:92vh;overflow:auto;
+      background:#fff;border-radius:20px;
+      box-shadow:0 24px 70px rgba(0,0,0,.25);padding:28px;
+    }
+    .modal-head {
+      display:flex;justify-content:space-between;align-items:flex-start;
+      gap:15px;margin-bottom:20px;
+    }
+    .modal-head h3 { color:var(--primary-dark);font-size:23px; }
+    .modal-head p { color:var(--muted);font-size:13px;line-height:1.5;margin-top:5px; }
+    .close-btn {
+      border:0;background:#eef4f8;color:#334155;
+      width:34px;height:34px;border-radius:10px;cursor:pointer;font-size:18px;
+    }
+    .hint { font-size:12px;color:var(--muted);line-height:1.6;margin-top:7px; }
+    .modal-actions { display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px; }
+    .modal-actions .btn-secondary { margin-top:0;background:#eef4f8;color:#334155;border:0; }
+    .modal-actions .btn-primary { box-shadow:none; }
+    @media(max-width:800px) {
+      body { padding:14px; }
+      .app-shell { grid-template-columns:1fr;max-width:520px; }
+      .brand-panel { padding:34px 30px; }
+      .brand-panel h1 { font-size:34px; }
+      .brand-footer { display:none; }
+      .login-panel { padding:38px 28px 42px; }
+    }
+  </style>
 </head>
 <body>
-<div class="wrap">
-<section class="brand">
-<div class="logo">S</div><h1>SILAGU</h1>
-<p>Sistem Administrasi Guru Terintegrasi untuk Guru, Kepala Sekolah, Pengawas, dan Super Admin.</p>
-</section>
-<section class="panel"><div class="box">
-<h2>Masuk ke SILAGU</h2>
-<p>Gunakan akun yang sudah terdaftar.</p>
-<div id="msg" class="msg"></div>
-<form id="loginForm">
-<label>Username</label><input id="username" required autocomplete="username">
-<label>Password</label><div class="pass"><input id="password" type="password" required autocomplete="current-password"><button type="button" onclick="toggle('password',this)">LIHAT</button></div>
-<button class="btn primary" id="loginBtn">MASUK</button>
-<button class="btn secondary" type="button" id="openRegister">DAFTAR AKUN</button>
-</form>
-<div class="status"><span id="dot" class="dot"></span><span id="status">Memeriksa server...</span></div>
-</div></section>
-</div>
+  <main class="app-shell">
+    <section class="brand-panel">
+      <div class="brand-content">
+        <div class="logo">S</div>
+        <h1>SILAGU</h1>
+        <p class="subtitle">Sistem Administrasi Guru Terintegrasi untuk administrasi guru, monitoring kepala sekolah, dan pengawasan sekolah.</p>
+        <div class="roles">
+          <div class="role-chip">👨‍🏫 Guru</div>
+          <div class="role-chip">🏫 Kepala Sekolah</div>
+          <div class="role-chip">📊 Pengawas</div>
+          <div class="role-chip">⚙️ Super Admin</div>
+        </div>
+      </div>
+      <div class="brand-footer">SILAGU • Sistem Administrasi Guru<br>Akses sesuai kewenangan dan sekolah masing-masing.</div>
+    </section>
 
-<div class="modal" id="modal">
-<div class="card">
-<div class="head"><div><h2>Daftar Akun SILAGU</h2><p>Role ditentukan otomatis dari domain email belajar.id.</p></div><button class="x" id="close">×</button></div>
-<div id="regMsg" class="msg"></div>
-<form id="regForm">
-<label>Nama lengkap</label><input id="rNama" required>
-<label>Username</label><input id="rUser" required>
-<label>Password</label><div class="pass"><input id="rPass" type="password" minlength="6" required><button type="button" onclick="toggle('rPass',this)">LIHAT</button></div>
-<label>Email</label><input id="rEmail" type="email" required placeholder="nama@guru.sd.belajar.id">
-<div class="hint">
-Kepala Sekolah: @admin.sd.belajar.id<br>
-Guru: @guru.sd.belajar.id<br>
-Pengawas: @dinas.belajar.id
-</div>
-<div class="actions">
-<button class="btn secondary" type="button" id="cancel">BATAL</button>
-<button class="btn primary" id="regBtn">DAFTAR</button>
-</div>
-</form>
-</div>
-</div>
+    <section class="login-panel">
+      <div class="login-box">
+        <h2>Masuk ke SILAGU</h2>
+        <p>Gunakan username dan password yang sudah terdaftar.</p>
+
+        <div id="message" class="message"></div>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" autocomplete="username" placeholder="Masukkan username" required>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-wrap">
+              <input type="password" id="password" autocomplete="current-password" placeholder="Masukkan password" required>
+              <button type="button" class="toggle-password" id="togglePassword">LIHAT</button>
+            </div>
+          </div>
+
+          <div class="options">
+            <label class="remember">
+              <input type="checkbox" id="rememberUsername">
+              Ingat username
+            </label>
+          </div>
+
+          <button type="submit" id="loginButton" class="btn btn-primary">MASUK</button>
+          <button type="button" id="openRegister" class="btn btn-secondary">DAFTAR AKUN</button>
+        </form>
+
+        <div class="system-status">
+          <span id="statusDot" class="dot"></span>
+          <span id="statusText">Memeriksa koneksi server...</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="registerModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div>
+          <h3>Daftar Akun SILAGU</h3>
+          <p>Role akun akan ditentukan otomatis berdasarkan domain email belajar.id.</p>
+        </div>
+        <button type="button" class="close-btn" id="closeRegister">×</button>
+      </div>
+
+      <div id="registerMessage" class="message"></div>
+
+      <form id="registerForm">
+        <div class="form-group">
+          <label for="regNama">Nama lengkap</label>
+          <input id="regNama" type="text" placeholder="Nama lengkap" required>
+        </div>
+
+        <div class="form-group">
+          <label for="regUsername">Username</label>
+          <input id="regUsername" type="text" placeholder="Username tanpa spasi" required>
+        </div>
+
+        <div class="form-group">
+          <label for="regPassword">Password</label>
+          <div class="input-wrap">
+            <input id="regPassword" type="password" placeholder="Minimal 6 karakter" minlength="6" required>
+            <button type="button" class="toggle-password" id="toggleRegPassword">LIHAT</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="regEmail">Email akun belajar.id</label>
+          <input id="regEmail" type="email" placeholder="nama@guru.sd.belajar.id" required>
+          <div class="hint">
+            Kepala Sekolah: nama@admin.sd.belajar.id<br>
+            Guru: nama@guru.sd.belajar.id<br>
+            Pengawas: nama@dinas.belajar.id
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelRegister">BATAL</button>
+          <button type="submit" class="btn btn-primary" id="registerButton">DAFTAR</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
 <script>
-const API_URL="https://script.google.com/macros/s/AKfycbwdZVSuw0vXn5dJA9Krh2MOwcI95Ynh6emYMphPtaONoX6xXq0L6q558hVRbIl6disp/exec";
-const ROUTES={SUPERADMIN:"dashboard-admin.html",PENGAWAS:"dashboard-pengawas.html",KEPALA_SEKOLAH:"dashboard-kepsek.html",GURU:"dashboard-guru.html"};
-const $=id=>document.getElementById(id);
-function message(el,type,text){el.className="msg "+type;el.textContent=text}
-function clearMessage(el){el.className="msg";el.textContent=""}
-function toggle(id,btn){const i=$(id);const hide=i.type==="password";i.type=hide?"text":"password";btn.textContent=hide?"SEMBUNYIKAN":"LIHAT"}
-async function post(data){
- const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(data),redirect:"follow"});
- const t=await r.text(); try{return JSON.parse(t)}catch(e){throw new Error("Respons server tidak valid.")}
-}
-async function ping(){
- try{const r=await fetch(API_URL+"?action=ping&_="+Date.now(),{cache:"no-store",redirect:"follow"});const d=await r.json();if(!d.success)throw 0;$("dot").className="dot online";$("status").textContent="Server SILAGU aktif"}
- catch(e){$("status").textContent="API SILAGU siap — silakan login"}
-}
-$("loginForm").onsubmit=async e=>{
- e.preventDefault();clearMessage($("msg"));$("loginBtn").disabled=true;
- try{
-  const d=await post({action:"login",username:$("username").value.trim(),password:$("password").value});
-  if(!d.success)return message($("msg"),"err",d.message||"Login gagal.");
-  localStorage.setItem("silagu_token",d.token);localStorage.setItem("silagu_user",JSON.stringify(d.user));localStorage.setItem("silagu_expires_at",d.expires_at||"");
-  message($("msg"),"ok","Login berhasil.");
-  const target=ROUTES[String(d.user.role||"").toUpperCase()];
-  if(target)setTimeout(()=>location.href=target,350);else message($("msg"),"err","Role akun tidak dikenali.");
- }catch(err){message($("msg"),"err",err.message)}finally{$("loginBtn").disabled=false}
+const API_URL = "https://script.google.com/macros/s/AKfycbwdZVSuw0vXn5dJA9Krh2MOwcI95Ynh6emYMphPtaONoX6xXq0L6q558hVRbIl6disp/exec";
+
+const ROLE_REDIRECT = {
+  SUPERADMIN: "dashboard-admin.html",
+  PENGAWAS: "dashboard-pengawas.html",
+  KEPALA_SEKOLAH: "dashboard-kepsek.html",
+  GURU: "dashboard-guru.html"
 };
-$("openRegister").onclick=()=>{$("modal").classList.add("show");clearMessage($("regMsg"));$("rNama").focus()};
-$("close").onclick=$("cancel").onclick=()=>$("modal").classList.remove("show");
-$("modal").onclick=e=>{if(e.target===$("modal"))$("modal").classList.remove("show")};
-$("regForm").onsubmit=async e=>{
- e.preventDefault();clearMessage($("regMsg"));
- const nama=$("rNama").value.trim(),username=$("rUser").value.trim(),password=$("rPass").value,email=$("rEmail").value.trim().toLowerCase();
- if(/\s/.test(username))return message($("regMsg"),"err","Username tidak boleh mengandung spasi.");
- $("regBtn").disabled=true;
- try{
-  const d=await post({action:"register",nama,username,password,email});
-  if(!d.success)return message($("regMsg"),"err",d.message||"Pendaftaran gagal.");
-  message($("regMsg"),"ok","Akun berhasil dibuat sebagai "+d.role+". Silakan login.");
-  $("username").value=username;
-  setTimeout(()=>{$("regForm").reset();$("modal").classList.remove("show");message($("msg"),"ok","Pendaftaran berhasil. Silakan login.")},900);
- }catch(err){message($("regMsg"),"err",err.message)}finally{$("regBtn").disabled=false}
-};
-ping();
+
+const $ = id => document.getElementById(id);
+
+function setMessage(el, type, text) {
+  el.className = "message " + type;
+  el.textContent = text;
+}
+
+function clearMessage(el) {
+  el.className = "message";
+  el.textContent = "";
+}
+
+function togglePassword(inputId, buttonId) {
+  const input = $(inputId);
+  const button = $(buttonId);
+  const hidden = input.type === "password";
+  input.type = hidden ? "text" : "password";
+  button.textContent = hidden ? "SEMBUNYIKAN" : "LIHAT";
+}
+
+async function apiPost(payload) {
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify(payload),
+    redirect: "follow"
+  });
+
+  const text = await response.text();
+
+  try {
+    return JSON.parse(text);
+  } catch (error) {
+    throw new Error("Respons server SILAGU tidak valid.");
+  }
+}
+
+async function checkServer() {
+  try {
+    const response = await fetch(
+      API_URL + "?action=ping&_=" + Date.now(),
+      {
+        method: "GET",
+        cache: "no-store",
+        redirect: "follow"
+      }
+    );
+
+    const data = await response.json();
+
+    if (!data.success) throw new Error("Ping gagal.");
+
+    $("statusDot").className = "dot online";
+    $("statusText").textContent = "Server SILAGU aktif";
+  } catch (error) {
+    $("statusDot").className = "dot";
+    $("statusText").textContent = "API SILAGU siap — silakan login";
+  }
+}
+
+function saveSession(result) {
+  localStorage.setItem("silagu_token", result.token || "");
+  localStorage.setItem("silagu_user", JSON.stringify(result.user || {}));
+  localStorage.setItem("silagu_expires_at", result.expires_at || "");
+}
+
+function redirectByRole(role) {
+  const normalizedRole = String(role || "").trim().toUpperCase();
+  const target = ROLE_REDIRECT[normalizedRole];
+
+  if (!target) {
+    setMessage($("message"), "error", "Role akun tidak dikenali.");
+    return;
+  }
+
+  window.location.href = target;
+}
+
+$("togglePassword").addEventListener("click", function() {
+  togglePassword("password", "togglePassword");
+});
+
+$("toggleRegPassword").addEventListener("click", function() {
+  togglePassword("regPassword", "toggleRegPassword");
+});
+
+$("loginForm").addEventListener("submit", async function(event) {
+  event.preventDefault();
+  clearMessage($("message"));
+
+  const username = $("username").value.trim();
+  const password = $("password").value;
+
+  $("loginButton").disabled = true;
+  $("loginButton").textContent = "MEMERIKSA...";
+
+  try {
+    const result = await apiPost({
+      action: "login",
+      username: username,
+      password: password
+    });
+
+    if (!result.success) {
+      setMessage($("message"), "error", result.message || "Login gagal.");
+      return;
+    }
+
+    saveSession(result);
+
+    if ($("rememberUsername").checked) {
+      localStorage.setItem("silagu_username", username);
+    } else {
+      localStorage.removeItem("silagu_username");
+    }
+
+    setMessage($("message"), "success", "Login berhasil. Membuka dashboard...");
+    setTimeout(function() {
+      redirectByRole(result.user.role);
+    }, 350);
+
+  } catch (error) {
+    setMessage($("message"), "error", error.message || "Gagal terhubung ke server.");
+  } finally {
+    $("loginButton").disabled = false;
+    $("loginButton").textContent = "MASUK";
+  }
+});
+
+function openRegister() {
+  clearMessage($("registerMessage"));
+  $("registerModal").classList.add("show");
+  $("regNama").focus();
+}
+
+function closeRegister() {
+  $("registerModal").classList.remove("show");
+}
+
+$("openRegister").addEventListener("click", openRegister);
+$("closeRegister").addEventListener("click", closeRegister);
+$("cancelRegister").addEventListener("click", closeRegister);
+
+$("registerModal").addEventListener("click", function(event) {
+  if (event.target === $("registerModal")) closeRegister();
+});
+
+$("registerForm").addEventListener("submit", async function(event) {
+  event.preventDefault();
+  clearMessage($("registerMessage"));
+
+  const nama = $("regNama").value.trim();
+  const username = $("regUsername").value.trim();
+  const password = $("regPassword").value;
+  const email = $("regEmail").value.trim().toLowerCase();
+
+  if (!nama || !username || !password || !email) {
+    setMessage($("registerMessage"), "error", "Semua data wajib diisi.");
+    return;
+  }
+
+  if (/\s/.test(username)) {
+    setMessage($("registerMessage"), "error", "Username tidak boleh mengandung spasi.");
+    return;
+  }
+
+  if (password.length < 6) {
+    setMessage($("registerMessage"), "error", "Password minimal 6 karakter.");
+    return;
+  }
+
+  $("registerButton").disabled = true;
+  $("registerButton").textContent = "MENYIMPAN...";
+
+  try {
+    const result = await apiPost({
+      action: "register",
+      nama: nama,
+      username: username,
+      password: password,
+      email: email
+    });
+
+    if (!result.success) {
+      setMessage($("registerMessage"), "error", result.message || "Pendaftaran gagal.");
+      return;
+    }
+
+    setMessage(
+      $("registerMessage"),
+      "success",
+      "Akun berhasil dibuat sebagai " + result.role + ". Silakan login."
+    );
+
+    $("username").value = username;
+
+    setTimeout(function() {
+      $("registerForm").reset();
+      closeRegister();
+      setMessage($("message"), "success", "Pendaftaran berhasil. Silakan login.");
+    }, 900);
+
+  } catch (error) {
+    setMessage($("registerMessage"), "error", error.message || "Pendaftaran gagal.");
+  } finally {
+    $("registerButton").disabled = false;
+    $("registerButton").textContent = "DAFTAR";
+  }
+});
+
+window.addEventListener("DOMContentLoaded", function() {
+  const savedUsername = localStorage.getItem("silagu_username");
+
+  if (savedUsername) {
+    $("username").value = savedUsername;
+    $("rememberUsername").checked = true;
+  }
+
+  checkServer();
+});
 </script>
 </body>
 </html>
